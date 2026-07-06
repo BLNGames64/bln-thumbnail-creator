@@ -42,6 +42,13 @@ const state = {
 
 };
 
+function autoResizeTextarea(){
+
+    titleInput.style.height = "auto";
+    titleInput.style.height = titleInput.scrollHeight + "px";
+
+}
+
 // =========================
 // INICIO
 // =========================
@@ -57,6 +64,8 @@ function init(){
     state.activeLines = [state.title.length - 1];
 
     textBox.style.width = boxWidthSlider.value + "%";
+
+    autoResizeTextarea();
 
     render();
 
@@ -168,46 +177,44 @@ function fitText(){
 
     if(lines.length === 0) return;
 
-    const containerWidth = titleContainer.clientWidth - 4;
+    const containerWidth = titleContainer.clientWidth - 8;
 
-    lines.forEach(line => {
+    lines.forEach(line=>{
 
         const shadow = line.parentElement.querySelector(".titleShadow");
 
-        // tamaño base para medir
+        // Estado limpio
         line.style.fontSize = "100px";
-        if(shadow) shadow.style.fontSize = "100px";
-
-        const realWidth = line.scrollWidth;
-
-        if(realWidth === 0) return;
-
-        let size = (containerWidth / realWidth) * 100;
-
-        size *= 0.99;
-        size = Math.max(10, Math.min(size, 200));
-
-        line.style.fontSize = size + "px";
-        if(shadow) shadow.style.fontSize = size + "px";
-
-        line.style.letterSpacing = (-size * 0.065) + "px";
-        if(shadow) shadow.style.letterSpacing = (-size * 0.065) + "px";
-
-        const correctedWidth = line.scrollWidth;
-
-        if(correctedWidth > 0){
-            size *= (containerWidth - 10) / correctedWidth;
-        }
-
-        line.style.fontSize = size + "px";
-        line.style.lineHeight = (size * 0.72) + "px";
-        line.style.letterSpacing = (-size * 0.065) + "px";
+        line.style.letterSpacing = "0px";
 
         if(shadow){
-            shadow.style.fontSize = size + "px";
-            shadow.style.lineHeight = (size * 0.72) + "px";
-            shadow.style.letterSpacing = (-size * 0.065) + "px";
+            shadow.style.fontSize = "100px";
+            shadow.style.letterSpacing = "0px";
         }
+
+        const width = line.scrollWidth;
+
+        if(width === 0) return;
+
+        const size = Math.max(
+            10,
+            Math.min((containerWidth / width) * 99, 200)
+        );
+
+        const spacing = -size * 0.065;
+
+        line.style.fontSize = size + "px";
+        line.style.lineHeight = size * 0.72 + "px";
+        line.style.letterSpacing = spacing + "px";
+
+        if(shadow){
+
+            shadow.style.fontSize = size + "px";
+            shadow.style.lineHeight = size * 0.72 + "px";
+            shadow.style.letterSpacing = spacing + "px";
+
+        }
+
     });
 
 }
@@ -279,6 +286,8 @@ function darkenColor(hex, percent){
 
 // texto
 titleInput.addEventListener("input",()=>{
+
+    autoResizeTextarea();
 
     state.title = titleInput.value
         .split("\n")
@@ -422,23 +431,29 @@ document.addEventListener("mousemove", (e)=>{
 // EXPORTAR PNG
 // =========================
 
-exportBtn.addEventListener("click",()=>{
+exportBtn.addEventListener("click", async () => {
 
-    html2canvas(document.getElementById("preview"),{
+    const node = document.getElementById("preview");
 
-        scale:3,
-        useCORS:true,
-        backgroundColor:null
+    try {
 
-    }).then(canvas=>{
+        const dataUrl = await htmlToImage.toPng(node, {
+
+            pixelRatio: 3,
+            cacheBust: true
+
+        });
 
         const link = document.createElement("a");
-
         link.download = "thumbnail.png";
-        link.href = canvas.toDataURL("image/png");
-
+        link.href = dataUrl;
         link.click();
-    });
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
 
 });
 
