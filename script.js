@@ -451,7 +451,10 @@ exportBtn.addEventListener("click", async () => {
 
     } catch (err) {
 
-        console.error(err);
+        console.error("ERROR:", err);
+        console.error("Nombre:", err.name);
+        console.error("Mensaje:", err.message);
+        console.error("Stack:", err.stack);
 
     }
 
