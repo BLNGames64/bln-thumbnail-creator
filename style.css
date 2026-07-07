@@ -312,3 +312,19 @@ button{
 
 }
 
+#version{
+
+    margin-top:12px;
+
+    text-align:right;
+
+    color:#777;
+
+    font-size:12px;
+
+    user-select:none;
+
+    opacity:0.8;
+
+}
+
