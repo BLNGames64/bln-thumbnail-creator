@@ -67,15 +67,18 @@ function init(){
 
     autoResizeTextarea();
 
+document.fonts.ready.then(()=>{
+
     render();
 
-    // 🔥 doble frame para estabilizar fonts + layout
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             fitText();
             adjustBoxHeight();
         });
     });
+
+});
 }
 
 // =========================
@@ -83,13 +86,19 @@ function init(){
 // =========================
 
 function render(){
+
     renderTitle();
     updateLogo();
 
     requestAnimationFrame(() => {
+
         fitText();
         adjustBoxHeight();
+
+        applyGradientToText();
+
     });
+
 }
 
 // =========================
@@ -130,11 +139,28 @@ function renderTitle(){
                 bottom = state.bottomColor;
             }
 
-            text.style.background = `linear-gradient(to bottom, ${top}, ${bottom})`;
-            text.style.webkitBackgroundClip = "text";
-            text.style.backgroundClip = "text";
-            text.style.color = "transparent";
-            text.style.webkitTextFillColor = "transparent";
+            /*text.style.backgroundImage = `linear-gradient(to bottom, ${top}, ${bottom})`;*/
+            
+
+            text.style.setProperty("--top-color", top);
+            text.style.setProperty("--bottom-color", bottom);
+
+            text.classList.add("gradient");
+
+            text.style.color = top;
+            
+            
+/*
+            text.style.background = "";
+            text.style.backgroundImage = "";
+            text.style.backgroundColor = "";
+            text.style.backgroundClip = "";
+            text.style.webkitBackgroundClip = "";
+            text.style.webkitTextFillColor = "";
+
+            text.style.color = top;*/
+            
+            
 
         } else {
             text.style.color = "white";
@@ -256,11 +282,12 @@ function updateLogo(){
 
     const text = document.querySelector(".logo-text");
 
-    text.style.background = `linear-gradient(to bottom, ${top}, ${bottom})`;
-    text.style.backgroundClip = "text";
-    text.style.webkitBackgroundClip = "text";
-    text.style.color = "transparent";
-    text.style.webkitTextFillColor = "transparent";
+    text.style.setProperty("--top-color", top);
+    text.style.setProperty("--bottom-color", bottom);
+
+    text.style.color = top;
+
+    applyGradientToLogo();
 }
 
 function darkenColor(hex, percent){
@@ -277,6 +304,258 @@ function darkenColor(hex, percent){
         r.toString(16).padStart(2,"0") +
         g.toString(16).padStart(2,"0") +
         b.toString(16).padStart(2,"0");
+
+}
+
+function applyGradientToText(){
+
+    const texts = document.querySelectorAll(".titleText.gradient");
+
+    texts.forEach(text=>{
+
+        // Evita duplicar imágenes cada vez que renderiza
+        const old = text.querySelector(".gradientCanvas");
+        if(old) old.remove();
+
+
+        const top = getComputedStyle(text)
+            .getPropertyValue("--top-color");
+
+        const bottom = getComputedStyle(text)
+            .getPropertyValue("--bottom-color");
+
+
+        const rect = text.getBoundingClientRect();
+
+        const canvas = document.createElement("canvas");
+
+        canvas.className = "gradientCanvas";
+
+        const scale = 3;
+
+        canvas.width = rect.width * scale;
+        canvas.height = rect.height * scale;
+
+
+        const ctx = canvas.getContext("2d");
+
+
+        ctx.scale(scale, scale);
+
+
+        const style = getComputedStyle(text);
+
+
+        // Misma fuente que el HTML
+        ctx.font =
+        `${style.fontWeight} ${style.fontSize} "Futura Round", sans-serif`;
+
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+
+
+        const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            rect.height
+        );
+
+
+        gradient.addColorStop(0, top.trim());
+        gradient.addColorStop(1, bottom.trim());
+
+
+        ctx.fillStyle = gradient;
+
+
+        // Ajuste vertical igual al texto HTML
+        const y = rect.height * 0.97;
+
+
+        const spacing = parseFloat(style.letterSpacing) || 0;
+
+        const letters = text.textContent.split("");
+
+        let totalWidth = 0;
+
+        letters.forEach(letter => {
+            totalWidth += ctx.measureText(letter).width + spacing;
+        });
+
+        let x=(rect.width-totalWidth)/2;
+
+
+        letters.forEach(letter => {
+
+            ctx.fillText(
+                letter,
+                x + ctx.measureText(letter).width / 2,
+                y
+            );
+
+            x += ctx.measureText(letter).width + (spacing * 1.14);
+
+        });
+
+
+        const img = document.createElement("img");
+
+        img.className="gradientCanvas";
+
+        img.src = canvas.toDataURL();
+
+
+        img.style.position="absolute";
+        img.style.left="0";
+        img.style.top="0";
+        img.style.width="100%";
+        img.style.height="100%";
+        img.style.pointerEvents="none";
+
+
+        // importante: no modifica el layout
+        img.style.zIndex="3";
+
+
+        text.style.color="transparent";
+
+        text.appendChild(img);
+
+    });
+
+}
+
+function applyGradientToLogo(){
+
+    const text = document.querySelector(".logo-text");
+
+    if(!text) return;
+
+
+    const old = text.querySelector(".logoGradientCanvas");
+
+    if(old) old.remove();
+
+
+    if(!document.fonts.check('900 20px "Futura Round"')){
+        return;
+    }
+
+
+    const top = getComputedStyle(text)
+        .getPropertyValue("--top-color");
+
+
+    const bottom = getComputedStyle(text)
+        .getPropertyValue("--bottom-color");
+
+
+    const rect = text.getBoundingClientRect();
+
+    const textWidth = rect.width - 6;
+
+
+    const canvas = document.createElement("canvas");
+
+    canvas.className="logoGradientCanvas";
+
+
+    const scale = 3;
+
+    canvas.width = rect.width * scale;
+    canvas.height = rect.height * scale;
+
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.scale(scale,scale);
+
+
+    const style = getComputedStyle(text);
+
+
+    ctx.font =
+        `${style.fontWeight} ${style.fontSize} "Futura Round", sans-serif`;
+
+
+    ctx.textAlign="center";
+    ctx.textBaseline="alphabetic";
+
+
+    const gradient = ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        rect.height
+    );
+
+
+    gradient.addColorStop(0, top.trim());
+    gradient.addColorStop(1, bottom.trim());
+
+
+    ctx.fillStyle=gradient;
+
+
+    const y = rect.height * 0.97;
+
+
+    const spacing = parseFloat(style.letterSpacing) || 0;
+
+
+    const letters=text.textContent.split("");
+
+    let totalWidth=0;
+
+
+    letters.forEach(letter=>{
+
+        totalWidth += 
+            ctx.measureText(letter).width + spacing;
+
+    });
+
+
+    let x=(textWidth-totalWidth)/2 + 2.2;
+
+
+    letters.forEach(letter=>{
+
+        ctx.fillText(
+            letter,
+            x + ctx.measureText(letter).width/2,
+            y
+        );
+
+
+        x += ctx.measureText(letter).width + spacing;
+
+    });
+
+
+
+    const img=document.createElement("img");
+
+    img.className="logoGradientCanvas";
+
+
+    img.src=canvas.toDataURL();
+
+
+    img.style.position="absolute";
+    img.style.left="0";
+    img.style.top="0";
+    img.style.width="100%";
+    img.style.height="100%";
+    img.style.pointerEvents="none";
+    img.style.zIndex="3";
+
+
+    text.style.color="transparent";
+
+    text.appendChild(img);
 
 }
 
@@ -427,6 +706,7 @@ document.addEventListener("mousemove", (e)=>{
     fitText();
     adjustBoxHeight();
 });*/
+
 
 // =========================
 // EXPORTAR PNG

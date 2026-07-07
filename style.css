@@ -10,7 +10,7 @@
     box-sizing:border-box;
     font-family: "Futura Round", sans-serif;
     font-weight: 700;
-    font-style: bold; 
+    /*font-style: bold; */
 }
 
 body{
@@ -72,22 +72,20 @@ body{
     line-height:0.8;
     letter-spacing:-1px;
     display:inline-block;
-    isolation:isolate;
-    
+    isolation:isolate;    
 }
 
 .logo-text{
+
     position:relative;
     z-index:2;
     text-align:center;
     text-transform:uppercase;
     font-family:"Futura Round", sans-serif;
-    font-weight:900;
+    font-weight:700;
 
-    background: linear-gradient(to bottom, #ff0000, #990000);
-    -webkit-background-clip:text;
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
+    color:white;
+    
 }
 
 .logo-shadow{
@@ -127,7 +125,10 @@ body{
     line-height:0;
 }
 
-
+.logoGradientCanvas{
+    pointer-events:none;
+    display:block;
+}
 
 #textBox{
     position:absolute;
@@ -150,29 +151,6 @@ body{
 
     box-shadow:3px 6px 5px rgb(0, 0, 0);
 }
-
-/* esquina de redimensionado */
-/*#resizeHandle{
-    position:absolute;
-    top:0;
-    right:0;
-    width:25px;
-    height:25px;
-    cursor:ne-resize;
-    background:transparent;
-}
-
-#resizeHandle::after{
-    content:"";
-    position:absolute;
-    top:6px;
-    right:6px;
-    width:10px;
-    height:10px;
-    border-top:3px solid #fff;
-    border-right:3px solid #fff;
-    opacity:0.6;
-}*/
 
 #titleContainer{
     width:100%;
@@ -198,7 +176,28 @@ body{
     text-align:center;
     text-transform:uppercase;
     white-space:nowrap;
+
 }
+
+.titleText.gradient{
+
+    color: var(--top-color);
+
+}
+
+.gradientCanvas{
+    pointer-events:none;
+    display:block;
+}
+
+/*.titleText::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    
+    background: linear-gradient(to bottom, var(--top-color), var(--bottom-color));
+}*/
 
 .titleShadow{
     position:absolute;
