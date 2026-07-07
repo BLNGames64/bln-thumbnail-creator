@@ -325,5 +325,119 @@ button{
 
     opacity:0.8;
 
+    display:block;
+
+    position:relative;
+
+    z-index:10;
+
 }
 
+#modalVersion{
+    display:block;
+    margin-top:8px;
+    font-size:14px;
+    line-height:1.4;
+    opacity:0.65;
+}
+
+
+#modalChanges{
+    display:block;
+    margin-top:8px;
+    font-size:14px;
+    line-height:1.4;
+    opacity:0.65;
+    text-align:left;
+}
+
+
+
+#version span{
+
+    cursor:pointer;
+
+}
+
+
+#version span:hover{
+
+    opacity:0.7;
+
+}
+
+
+#infoModal{
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,0.7);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:999;
+
+}
+
+
+#infoBox{
+
+    width:85%;
+    max-width:350px;
+
+    background:#161616;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    text-align:center;
+
+    box-shadow:0 5px 20px black;
+
+}
+
+
+#infoBox h2{
+
+    margin-bottom:15px;
+    text-decoration: underline;
+
+}
+
+
+#infoBox p{
+    margin:15px 0;
+    line-height:1.5;
+}
+
+#infoBox p strong{
+    text-transform:uppercase;
+}
+
+
+
+#infoBox a{
+
+    color:#ff3333;
+
+    text-decoration:none;
+
+}
+
+
+#infoBox button{
+
+    margin-top:20px;
+
+    width:100%;
+
+    background:#d40000;
+
+    color:white;
+
+}

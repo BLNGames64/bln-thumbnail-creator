@@ -25,6 +25,15 @@ const textBox = document.getElementById("textBox");
 
 const boxWidthSlider = document.getElementById("boxWidthSlider");
 
+
+const versionButton = document.getElementById("versionButton");
+const infoModal = document.getElementById("infoModal");
+const closeInfo = document.getElementById("closeInfo");
+
+
+
+
+
 // =========================
 // ESTADO
 // =========================
@@ -752,3 +761,47 @@ if ("serviceWorker" in navigator) {
     });
 
 }
+
+fetch("manifest.json")
+.then(response => response.json())
+.then(data => {
+
+    const versionButton = document.getElementById("versionButton");
+    const modalVersion = document.getElementById("modalVersion");
+    const modalChanges = document.getElementById("modalChanges");
+
+    // Texto inferior de la aplicación
+    versionButton.textContent = data.version;
+
+    // Datos del popup
+    modalVersion.textContent = data.version;
+
+    modalChanges.innerHTML = data.message.replace(/\n/g, "<br>");
+
+})
+.catch(error => {
+    console.error("Error cargando version.json:", error);
+});
+
+
+versionButton.addEventListener("click",()=>{
+
+    infoModal.style.display="flex";
+
+});
+
+
+closeInfo.addEventListener("click",()=>{
+
+    infoModal.style.display="none";
+
+});
+
+
+infoModal.addEventListener("click",(e)=>{
+
+    if(e.target === infoModal){
+        infoModal.style.display="none";
+    }
+
+});
