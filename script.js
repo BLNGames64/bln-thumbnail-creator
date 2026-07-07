@@ -432,34 +432,24 @@ document.addEventListener("mousemove", (e)=>{
 // EXPORTAR PNG
 // =========================
 
-exportBtn.addEventListener("click", async () => {
+exportBtn.addEventListener("click", () => {
 
-    const node = document.getElementById("preview");
+    html2canvas(document.getElementById("preview"), {
 
-    try {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: null
 
-        const dataUrl = await htmlToImage.toPng(node, {
-
-            pixelRatio: 3,
-            cacheBust: true
-            useCORS: true,
-            imagePlaceholder: ""
-
-        });
+    }).then(canvas => {
 
         const link = document.createElement("a");
+
         link.download = "thumbnail.png";
-        link.href = dataUrl;
+        link.href = canvas.toDataURL("image/png");
+
         link.click();
 
-    } catch (err) {
-
-        console.error("ERROR:", err);
-        console.error("Nombre:", err.name);
-        console.error("Mensaje:", err.message);
-        console.error("Stack:", err.stack);
-
-    }
+    });
 
 });
 
