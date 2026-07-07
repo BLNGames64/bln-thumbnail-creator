@@ -386,6 +386,7 @@ imageInput.addEventListener("change",(e)=>{
 
     reader.onload = ()=>{
         backgroundImage.src = reader.result;
+        backgroundImage.style.display = "block";
     };
 
     reader.readAsDataURL(file);
@@ -441,6 +442,8 @@ exportBtn.addEventListener("click", async () => {
 
             pixelRatio: 3,
             cacheBust: true
+            useCORS: true,
+            imagePlaceholder: ""
 
         });
 
