@@ -837,6 +837,7 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
         (textRect.width * scaleX - totalWidth) / 2;
 
     
+        
     const logoOffsetY = -10 * scaleY;
 
     const y =
