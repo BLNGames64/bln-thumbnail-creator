@@ -586,7 +586,7 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
         let style = getComputedStyle(shadow);
         ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
         ctx.textAlign = "center";
-        ctx.textBaseline = "alphabetic";
+        ctx.textBaseline = "middle"; // Anclaje al centro
         ctx.fillStyle = style.color;
 
         const shadowSpacing = parseFloat(style.letterSpacing) || 0;
@@ -599,23 +599,22 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
 
         let shadowX = (shadowRect.left - previewRect.left) * scaleX + (shadowRect.width * scaleX - shadowTotalWidth) / 2;
         
-        const shadowMetrics = ctx.measureText(shadow.textContent.toUpperCase());
-        const shadowAscent = shadowMetrics.fontBoundingBoxAscent || shadowMetrics.actualBoundingBoxAscent;
-        const shadowY = (shadowRect.top - previewRect.top) * scaleY + shadowAscent;
+        // Calculamos el centro exacto de la caja
+        const shadowY = (shadowRect.top - previewRect.top + shadowRect.height / 2) * scaleY;
 
         shadowLetters.forEach(letter => {
             const w = ctx.measureText(letter).width;
             ctx.fillText(letter, shadowX + w / 2, shadowY);
             shadowX += w + (shadowSpacing * scaleX);
         });
-
         ctx.restore();
 
 
         // ---------- TEXTO ----------
         style = getComputedStyle(text);
         ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
-        ctx.textBaseline = "alphabetic";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle"; // Anclaje al centro
 
         const top = getComputedStyle(text).getPropertyValue("--top-color");
         const bottom = getComputedStyle(text).getPropertyValue("--bottom-color");
@@ -648,9 +647,9 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
 
         let x = (textRect.left - previewRect.left) * scaleX + (textRect.width * scaleX - totalWidth) / 2;
 
-        const textMetrics = ctx.measureText(text.textContent.toUpperCase());
-        const textAscent = textMetrics.fontBoundingBoxAscent || textMetrics.actualBoundingBoxAscent;
-        const y = (wrapper.getBoundingClientRect().top - previewRect.top) * scaleY + textAscent;
+        // Calculamos el centro exacto de la línea principal
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const y = (wrapperRect.top - previewRect.top + wrapperRect.height / 2) * scaleY;
 
         letters.forEach(letter => {
             const w = ctx.measureText(letter).width;
@@ -677,7 +676,7 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     ctx.font = `${blnStyle.fontWeight} ${parseFloat(blnStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
     ctx.fillStyle = blnStyle.color;
     ctx.textAlign = "left";
-    ctx.textBaseline = "alphabetic";
+    ctx.textBaseline = "middle"; // Anclaje al centro
     ctx.scale(1,1);
     
     ctx.shadowColor = "rgba(0,0,0,0.75)";
@@ -688,10 +687,8 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     const blnLetters = "BLN".split("");
     const blnSpacing = -1 * scaleX;
     let blnX = (blnRect.left - previewRect.left) * scaleX;
-
-    const blnMetrics = ctx.measureText("BLN");
-    const blnAscent = blnMetrics.fontBoundingBoxAscent || blnMetrics.actualBoundingBoxAscent;
-    const blnY = (blnRect.top - previewRect.top) * scaleY + blnAscent;
+    
+    const blnY = (blnRect.top - previewRect.top + blnRect.height / 2) * scaleY;
 
     blnLetters.forEach(letter => {
         ctx.fillText(letter, blnX, blnY);
@@ -708,18 +705,17 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     ctx.font = `${regStyle.fontWeight} ${parseFloat(regStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
     ctx.fillStyle = regStyle.color;
     ctx.textAlign = "left";
-    ctx.textBaseline = "alphabetic";
+    ctx.textBaseline = "middle"; // Anclaje al centro
     
     ctx.shadowColor = "rgba(0,0,0,1)";
     ctx.shadowBlur = 0.8 * scaleX;
     ctx.shadowOffsetX = 1 * scaleX;
     ctx.shadowOffsetY = 2 * scaleY;
 
-    const regMetrics = ctx.measureText("®");
-    const regAscent = regMetrics.fontBoundingBoxAscent || regMetrics.actualBoundingBoxAscent;
-    const regY = (regRect.top - previewRect.top) * scaleY + regAscent;
+    // Aquí se eliminó el +30, tomará la geometría real del HTML
+    const regY = (regRect.top - previewRect.top + regRect.height / 2) * scaleY;
+    ctx.fillText("®", (regRect.left - previewRect.left) * scaleX, regY);
 
-    ctx.fillText("®", (regRect.left - previewRect.left) * scaleX, regY + 30);
     ctx.restore();
     
     // ---------- TEXTO ----------
@@ -731,7 +727,8 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
 
     let style = getComputedStyle(text);
     ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
-    ctx.textBaseline = "alphabetic";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle"; // Anclaje al centro
 
     const top = style.getPropertyValue("--top-color");
     const bottom = style.getPropertyValue("--bottom-color");
@@ -753,10 +750,9 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     });
 
     let x = (textRect.left - previewRect.left) * scaleX + (textRect.width * scaleX - totalWidth) / 2;
-
-    const textLogoMetrics = ctx.measureText(text.textContent.toUpperCase());
-    const textLogoAscent = textLogoMetrics.fontBoundingBoxAscent || textLogoMetrics.actualBoundingBoxAscent;
-    const textY = (text.parentElement.getBoundingClientRect().top - previewRect.top) * scaleY + textLogoAscent;
+    
+    const parentRect = text.parentElement.getBoundingClientRect();
+    const textY = (parentRect.top - previewRect.top + parentRect.height / 2) * scaleY;
 
     letters.forEach(letter => {
         const w = ctx.measureText(letter).width;
