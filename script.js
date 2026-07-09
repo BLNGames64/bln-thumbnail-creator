@@ -943,10 +943,10 @@ exportBtn.addEventListener("click", async () => {
 
     ctx.save();
 
-ctx.shadowColor = "rgba(0,0,0,1)";
+ctx.shadowColor = "rgba(0,0,0,0.7)";
 ctx.shadowBlur = 3 * scaleX;
 ctx.shadowOffsetX = 3 * scaleX;
-ctx.shadowOffsetY = 5 * scaleY;
+ctx.shadowOffsetY = 4 * scaleY;
 
 ctx.fillStyle = "#161616";
 
@@ -976,10 +976,10 @@ ctx.restore();
 
     ctx.save();
 
-ctx.shadowColor = "rgba(0,0,0,1)";
+ctx.shadowColor = "rgba(0,0,0,0.7)";
 ctx.shadowBlur = 3 * scaleX;
-ctx.shadowOffsetX = 3 * scaleX;
-ctx.shadowOffsetY = 5 * scaleY;
+ctx.shadowOffsetX = 2 * scaleX;
+ctx.shadowOffsetY = 3 * scaleY;
 
 ctx.fillStyle = "#161616";
 
