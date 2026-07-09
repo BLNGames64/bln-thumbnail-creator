@@ -570,6 +570,288 @@ function applyGradientToLogo(){
 
 }
 
+function drawTitle(ctx, previewRect, scaleX, scaleY){
+
+    const lines = document.querySelectorAll(".titleLine");
+
+    lines.forEach(wrapper=>{
+
+        const shadow = wrapper.querySelector(".titleShadow");
+        const text = wrapper.querySelector(".titleText");
+
+        const shadowRect = shadow.getBoundingClientRect();
+        const textRect = text.getBoundingClientRect();
+
+        // SOMBRA
+
+        let style = getComputedStyle(shadow);
+
+        ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+
+        ctx.fillStyle = style.color;
+
+       const shadowSpacing = parseFloat(style.letterSpacing) || 0;
+
+        const shadowLetters = shadow.textContent.split("");
+
+        let shadowTotalWidth = 0;
+
+        shadowLetters.forEach(letter => {
+
+            shadowTotalWidth +=
+                ctx.measureText(letter).width + (shadowSpacing * scaleX);
+
+        });
+
+        let shadowX =
+            (shadowRect.left - previewRect.left) * scaleX +
+            (shadowRect.width * scaleX - shadowTotalWidth) / 2;
+
+        const shadowY =
+            (shadowRect.top - previewRect.top) * scaleY;
+
+        shadowLetters.forEach(letter => {
+
+            const w = ctx.measureText(letter).width;
+
+           
+
+            shadowX += w + (shadowSpacing * scaleX);
+
+        });
+
+        ctx.restore();
+
+        // TEXTO
+
+        style = getComputedStyle(text);
+
+        ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
+
+        const top = getComputedStyle(text).getPropertyValue("--top-color");
+        const bottom = getComputedStyle(text).getPropertyValue("--bottom-color");
+
+        if(top && bottom){
+
+            const gradient = ctx.createLinearGradient(
+
+                0,
+                (textRect.top - previewRect.top) * scaleY,
+
+                0,
+                (textRect.bottom - previewRect.top) * scaleY
+
+            );
+
+            gradient.addColorStop(0, top.trim());
+            gradient.addColorStop(1, bottom.trim());
+
+            ctx.fillStyle = gradient;
+
+        }else{
+
+            ctx.fillStyle = style.color;
+
+        }
+
+        ctx.save();
+
+        ctx.shadowColor = "rgba(0,0,0,0.75)";
+        ctx.shadowBlur = 0.8 * scaleX;
+        ctx.shadowOffsetX = 1 * scaleX;
+        ctx.shadowOffsetY = 2.5 * scaleY;
+
+        const spacing = parseFloat(style.letterSpacing) || 0;
+
+        const letters = text.textContent.split("");
+
+        let totalWidth = 0;
+
+        letters.forEach(letter => {
+
+            totalWidth += ctx.measureText(letter).width + (spacing * scaleX);
+
+        });
+
+        let x =
+            (textRect.left - previewRect.left) * scaleX +
+            (textRect.width * scaleX - totalWidth) / 2;
+
+        const y = (textRect.top - previewRect.top) * scaleY;
+
+        letters.forEach(letter => {
+
+            const w = ctx.measureText(letter).width;
+
+            ctx.fillText(
+                letter,
+                x + w / 2,
+                y
+            );
+
+            x += w + (spacing * scaleX);
+
+        });
+
+    });
+
+}
+
+function drawLogo(ctx, previewRect, scaleX, scaleY){
+
+    const shadow = document.querySelector(".logo-shadow");
+    const text = document.querySelector(".logo-text");
+
+    const shadowRect = shadow.getBoundingClientRect();
+    const textRect = text.getBoundingClientRect();
+
+    
+       // ---------- BLN ----------
+
+    const bln = document.querySelector(".logo-bln");
+
+    const blnRect = bln.getBoundingClientRect();
+
+    const blnStyle = getComputedStyle(bln);
+
+    ctx.save();
+
+    ctx.font = `${blnStyle.fontWeight} ${parseFloat(blnStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
+
+    ctx.fillStyle = blnStyle.color;
+
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+
+    ctx.scale(1,1);
+
+    // Igual que el text-shadow del CSS
+    ctx.shadowColor = "rgba(0,0,0,0.75)";
+    ctx.shadowBlur = 0.8 * scaleX;
+    ctx.shadowOffsetX = 1 * scaleX;
+    ctx.shadowOffsetY = 2.5 * scaleY;
+
+    const blnLetters = "BLN".split("");
+
+    const blnSpacing = -1 * scaleX;
+
+    let blnX =
+        (blnRect.left - previewRect.left) * scaleX;
+
+
+    blnLetters.forEach(letter => {
+
+        ctx.fillText(
+            letter,
+            blnX,
+            (blnRect.top - previewRect.top) * scaleY
+        );
+
+        blnX += ctx.measureText(letter).width + blnSpacing;
+
+    });
+
+    ctx.restore();
+
+    // ---------- ® ----------
+
+    const reg = document.querySelector(".logo-reg");
+
+    const regRect = reg.getBoundingClientRect();
+
+    const regStyle = getComputedStyle(reg);
+
+    ctx.save();
+
+    ctx.font = `${regStyle.fontWeight} ${parseFloat(regStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
+
+    ctx.fillStyle = regStyle.color;
+
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+
+    // Misma sombra que BLN
+    ctx.shadowColor = "rgba(0,0,0,1)";
+    ctx.shadowBlur = 0.8 * scaleX;
+    ctx.shadowOffsetX = 1 * scaleX;
+    ctx.shadowOffsetY = 2 * scaleY;
+
+    ctx.fillText(
+        "®",
+        (regRect.left - previewRect.left) * scaleX,
+        (regRect.top - previewRect.top) * scaleY + 10
+    );
+
+    ctx.restore();
+    
+
+    ctx.save();
+    
+    ctx.shadowColor = "rgba(0,0,0,1)";
+    ctx.shadowBlur = 0.8 * scaleX;
+    ctx.shadowOffsetX = 1 * scaleX;
+    ctx.shadowOffsetY = 2 * scaleY;
+
+    // ---------- TEXTO ----------
+
+    style = getComputedStyle(text);
+
+    ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
+
+    const top = style.getPropertyValue("--top-color");
+    const bottom = style.getPropertyValue("--bottom-color");
+
+    const gradient = ctx.createLinearGradient(
+        0,
+        (textRect.top - previewRect.top) * scaleY,
+        0,
+        (textRect.bottom - previewRect.top) * scaleY
+    );
+
+    gradient.addColorStop(0, top.trim());
+    gradient.addColorStop(1, bottom.trim());
+
+    ctx.fillStyle = gradient;
+
+    const spacing = parseFloat(style.letterSpacing) || 0;
+
+    const letters = text.textContent.split("");
+
+    let totalWidth = 0;
+
+    letters.forEach(letter => {
+
+        totalWidth += ctx.measureText(letter).width + (spacing * scaleX);
+
+    });
+
+    let x =
+        (textRect.left - previewRect.left) * scaleX +
+        (textRect.width * scaleX - totalWidth) / 2;
+
+    const y = (textRect.top - previewRect.top) * scaleY;
+
+    letters.forEach(letter => {
+
+        const w = ctx.measureText(letter).width;
+
+        ctx.fillText(
+            letter,
+            x + w / 2,
+            y
+        );
+
+        x += w + (spacing * scaleX);
+
+    });
+
+    ctx.restore();    
+
+}
+
 // =========================
 // EVENTOS
 // =========================
@@ -745,6 +1027,10 @@ document.addEventListener("mousemove", (e)=>{
 
 exportBtn.addEventListener("click", async () => {
 
+    // =========================
+    // CANVAS 4K
+    // =========================
+
     const canvas = document.createElement("canvas");
 
     canvas.width = 3840;
@@ -752,20 +1038,137 @@ exportBtn.addEventListener("click", async () => {
 
     const ctx = canvas.getContext("2d");
 
+    // =========================
+    // ESCALA
+    // =========================
+
+    const preview = document.getElementById("preview");
+
+    const previewRect = preview.getBoundingClientRect();
+
+    const scaleX = canvas.width / previewRect.width;
+    const scaleY = canvas.height / previewRect.height;
+
+    // =========================
+    // FONDO
+    // =========================
+
     if (backgroundImage.src) {
+
         await new Promise(resolve => {
+
             if (backgroundImage.complete) {
+
                 resolve();
+
             } else {
+
                 backgroundImage.onload = resolve;
+
             }
+
         });
 
-        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+            backgroundImage,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
     } else {
+
         ctx.fillStyle = "#202020";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
     }
+
+    // =========================
+    // CAJA DEL TEXTO
+    // =========================
+
+    const textRect = textBox.getBoundingClientRect();
+
+    ctx.save();
+
+ctx.shadowColor = "rgba(0,0,0,1)";
+ctx.shadowBlur = 3 * scaleX;
+ctx.shadowOffsetX = 3 * scaleX;
+ctx.shadowOffsetY = 5 * scaleY;
+
+ctx.fillStyle = "#161616";
+
+ctx.beginPath();
+
+ctx.roundRect(
+
+    (textRect.left - previewRect.left) * scaleX,
+    (textRect.top - previewRect.top) * scaleY,
+    textRect.width * scaleX,
+    textRect.height * scaleY,
+    40
+
+);
+
+ctx.fill();
+
+ctx.restore();
+
+    // =========================
+    // CAJA DEL LOGO
+    // =========================
+
+    const logo = document.getElementById("logo");
+
+    const logoRect = logo.getBoundingClientRect();
+
+    ctx.save();
+
+ctx.shadowColor = "rgba(0,0,0,1)";
+ctx.shadowBlur = 3 * scaleX;
+ctx.shadowOffsetX = 3 * scaleX;
+ctx.shadowOffsetY = 5 * scaleY;
+
+ctx.fillStyle = "#161616";
+
+ctx.beginPath();
+
+ctx.roundRect(
+
+    (logoRect.left - previewRect.left) * scaleX,
+    (logoRect.top - previewRect.top) * scaleY,
+    logoRect.width * scaleX,
+    logoRect.height * scaleY,
+    30
+
+);
+
+ctx.fill();
+
+ctx.restore();
+
+    // =========================
+    // AQUÍ DIBUJAREMOS EL TÍTULO
+    // =========================
+
+    drawTitle(ctx, previewRect, scaleX, scaleY);
+
+    // =========================
+    // AQUÍ DIBUJAREMOS EL LOGO
+    // =========================
+
+    drawLogo(ctx, previewRect, scaleX, scaleY);
+
+    // =========================
+    // MOSTRAR RESULTADO
+    // =========================
 
     const img = new Image();
 
@@ -773,7 +1176,23 @@ exportBtn.addEventListener("click", async () => {
 
     const win = window.open();
 
-    win.document.body.style.margin="0";
+    win.document.title = "BLN Thumbnail";
+
+    win.document.body.style.margin = "0";
+    win.document.body.style.background = "#111";
+    win.document.body.style.display = "flex";
+    win.document.body.style.justifyContent = "center";
+    win.document.body.style.alignItems = "center";
+    win.document.body.style.minHeight = "100vh";
+
+    img.style.maxWidth = "85%";
+    img.style.maxHeight = "85vh";
+    img.style.width = "auto";
+    img.style.height = "auto";
+    img.style.display = "block";
+    img.style.boxShadow = "0 0 25px rgba(0,0,0,0.6)";
+    img.style.borderRadius = "8px";
+
     win.document.body.appendChild(img);
 
 });
