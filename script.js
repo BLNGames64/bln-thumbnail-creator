@@ -631,6 +631,8 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
 
         ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
 
+        ctx.textBaseline = "top";
+
         const top = getComputedStyle(text).getPropertyValue("--top-color");
         const bottom = getComputedStyle(text).getPropertyValue("--bottom-color");
 
@@ -680,11 +682,7 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
             (textRect.left - previewRect.left) * scaleX +
             (textRect.width * scaleX - totalWidth) / 2;
 
-        const titleOffsetY = -12 * scaleY;
-
-        const y = 
-            (wrapper.getBoundingClientRect().top - previewRect.top) * scaleY
-            + titleOffsetY;
+        const y = (textRect.top - previewRect.top) * scaleY;
 
         letters.forEach(letter => {
 
@@ -786,7 +784,7 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     ctx.fillText(
         "®",
         (regRect.left - previewRect.left) * scaleX,
-        (regRect.top - previewRect.top) * scaleY + 10
+        (regRect.top - previewRect.top) * scaleY + 30
     );
 
     ctx.restore();
@@ -804,6 +802,8 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     style = getComputedStyle(text);
 
     ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
+
+    ctx.textBaseline = "top";
 
     const top = style.getPropertyValue("--top-color");
     const bottom = style.getPropertyValue("--bottom-color");
@@ -836,13 +836,7 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
         (textRect.left - previewRect.left) * scaleX +
         (textRect.width * scaleX - totalWidth) / 2;
 
-    
-        
-    const logoOffsetY = -10 * scaleY;
-
-    const y =
-        (textRect.top - previewRect.top) * scaleY
-        + logoOffsetY;
+    const y = (textRect.top - previewRect.top) * scaleY;
 
     letters.forEach(letter => {
 
