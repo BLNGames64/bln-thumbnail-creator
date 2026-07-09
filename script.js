@@ -722,7 +722,7 @@ document.addEventListener("mousemove", (e)=>{
 // =========================
 // EXPORTAR PNG
 // =========================
-exportBtn.addEventListener("click", () => {
+/*exportBtn.addEventListener("click", () => {
 
     setTimeout(() => {
 
@@ -740,6 +740,29 @@ exportBtn.addEventListener("click", () => {
         });
 
     }, 200);
+
+});*/
+
+exportBtn.addEventListener("click", async () => {
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = 3840;
+    canvas.height = 2160;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#202020";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    const img = new Image();
+
+    img.src = canvas.toDataURL("image/png");
+
+    const win = window.open();
+
+    win.document.body.style.margin="0";
+    win.document.body.appendChild(img);
 
 });
 
