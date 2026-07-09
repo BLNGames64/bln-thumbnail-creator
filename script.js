@@ -682,11 +682,18 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
             (textRect.left - previewRect.left) * scaleX +
             (textRect.width * scaleX - totalWidth) / 2;
 
-        const metrics = ctx.measureText(text.textContent.toUpperCase());
-const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+        // 1. Obtenemos métricas precisas
+const metrics = ctx.measureText(line.textContent.toUpperCase());
+
+// 2. Esta es la clave: el "Ascent" es exactamente el espacio desde la línea base al tope.
+// Al usar textBaseline = "alphabetic" (que es el default), 
+// para que el tope del texto coincida con el tope de la caja, el Y debe ser:
 const wrapperRect = wrapper.getBoundingClientRect();
-const targetCenterY = (wrapperRect.top - previewRect.top) * scaleY + (wrapperRect.height * scaleY / 2);
-const y = targetCenterY + (fontHeight / 2) - metrics.fontBoundingBoxDescent;
+const y = (wrapperRect.top - previewRect.top) * scaleY + metrics.fontBoundingBoxAscent;
+
+// 3. Dibujamos
+ctx.textBaseline = "alphabetic";
+ctx.fillText(letter, x + w / 2, y);
 
         letters.forEach(letter => {
 
@@ -840,11 +847,18 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
         (textRect.left - previewRect.left) * scaleX +
         (textRect.width * scaleX - totalWidth) / 2;
 
-    const metrics = ctx.measureText(text.textContent.toUpperCase());
-const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
-const parentRect = text.parentElement.getBoundingClientRect();
-const targetCenterY = (parentRect.top - previewRect.top) * scaleY + (parentRect.height * scaleY / 2);
-const y = targetCenterY + (fontHeight / 2) - metrics.fontBoundingBoxDescent;
+    // 1. Obtenemos métricas precisas
+const metrics = ctx.measureText(line.textContent.toUpperCase());
+
+// 2. Esta es la clave: el "Ascent" es exactamente el espacio desde la línea base al tope.
+// Al usar textBaseline = "alphabetic" (que es el default), 
+// para que el tope del texto coincida con el tope de la caja, el Y debe ser:
+const wrapperRect = wrapper.getBoundingClientRect();
+const y = (wrapperRect.top - previewRect.top) * scaleY + metrics.fontBoundingBoxAscent;
+
+// 3. Dibujamos
+ctx.textBaseline = "alphabetic";
+ctx.fillText(letter, x + w / 2, y);
 
     letters.forEach(letter => {
 
