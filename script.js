@@ -582,300 +582,188 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
         const shadowRect = shadow.getBoundingClientRect();
         const textRect = text.getBoundingClientRect();
 
-        // SOMBRA
-
+        // ---------- SOMBRA ----------
         let style = getComputedStyle(shadow);
-
         ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
-
         ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-
+        ctx.textBaseline = "alphabetic";
         ctx.fillStyle = style.color;
 
-       const shadowSpacing = parseFloat(style.letterSpacing) || 0;
-
+        const shadowSpacing = parseFloat(style.letterSpacing) || 0;
         const shadowLetters = shadow.textContent.split("");
-
         let shadowTotalWidth = 0;
 
         shadowLetters.forEach(letter => {
-
-            shadowTotalWidth +=
-                ctx.measureText(letter).width + (shadowSpacing * scaleX);
-
+            shadowTotalWidth += ctx.measureText(letter).width + (shadowSpacing * scaleX);
         });
 
-        let shadowX =
-            (shadowRect.left - previewRect.left) * scaleX +
-            (shadowRect.width * scaleX - shadowTotalWidth) / 2;
-
-        const shadowY =
-            (shadowRect.top - previewRect.top) * scaleY;
+        let shadowX = (shadowRect.left - previewRect.left) * scaleX + (shadowRect.width * scaleX - shadowTotalWidth) / 2;
+        
+        const shadowMetrics = ctx.measureText(shadow.textContent.toUpperCase());
+        const shadowAscent = shadowMetrics.fontBoundingBoxAscent || shadowMetrics.actualBoundingBoxAscent;
+        const shadowY = (shadowRect.top - previewRect.top) * scaleY + shadowAscent;
 
         shadowLetters.forEach(letter => {
-
             const w = ctx.measureText(letter).width;
-
-           
-
+            ctx.fillText(letter, shadowX + w / 2, shadowY);
             shadowX += w + (shadowSpacing * scaleX);
-
         });
 
         ctx.restore();
 
-        // TEXTO
 
+        // ---------- TEXTO ----------
         style = getComputedStyle(text);
-
         ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
-
-        ctx.textBaseline = "top";
+        ctx.textBaseline = "alphabetic";
 
         const top = getComputedStyle(text).getPropertyValue("--top-color");
         const bottom = getComputedStyle(text).getPropertyValue("--bottom-color");
 
         if(top && bottom){
-
             const gradient = ctx.createLinearGradient(
-
-                0,
-                (textRect.top - previewRect.top) * scaleY,
-
-                0,
-                (textRect.bottom - previewRect.top) * scaleY
-
+                0, (textRect.top - previewRect.top) * scaleY,
+                0, (textRect.bottom - previewRect.top) * scaleY
             );
-
             gradient.addColorStop(0, top.trim());
             gradient.addColorStop(1, bottom.trim());
-
             ctx.fillStyle = gradient;
-
-        }else{
-
+        } else {
             ctx.fillStyle = style.color;
-
         }
 
         ctx.save();
-
         ctx.shadowColor = "rgba(0,0,0,0.75)";
         ctx.shadowBlur = 0.8 * scaleX;
         ctx.shadowOffsetX = 1 * scaleX;
         ctx.shadowOffsetY = 2.5 * scaleY;
 
         const spacing = parseFloat(style.letterSpacing) || 0;
-
         const letters = text.textContent.split("");
-
         let totalWidth = 0;
 
         letters.forEach(letter => {
-
             totalWidth += ctx.measureText(letter).width + (spacing * scaleX);
-
         });
 
-        let x =
-            (textRect.left - previewRect.left) * scaleX +
-            (textRect.width * scaleX - totalWidth) / 2;
+        let x = (textRect.left - previewRect.left) * scaleX + (textRect.width * scaleX - totalWidth) / 2;
 
-        // 1. Obtenemos métricas precisas
-const metrics = ctx.measureText(line.textContent.toUpperCase());
-
-// 2. Esta es la clave: el "Ascent" es exactamente el espacio desde la línea base al tope.
-// Al usar textBaseline = "alphabetic" (que es el default), 
-// para que el tope del texto coincida con el tope de la caja, el Y debe ser:
-const wrapperRect = wrapper.getBoundingClientRect();
-const y = (wrapperRect.top - previewRect.top) * scaleY + metrics.fontBoundingBoxAscent;
-
-// 3. Dibujamos
-ctx.textBaseline = "alphabetic";
-ctx.fillText(letter, x + w / 2, y);
+        const textMetrics = ctx.measureText(text.textContent.toUpperCase());
+        const textAscent = textMetrics.fontBoundingBoxAscent || textMetrics.actualBoundingBoxAscent;
+        const y = (wrapper.getBoundingClientRect().top - previewRect.top) * scaleY + textAscent;
 
         letters.forEach(letter => {
-
             const w = ctx.measureText(letter).width;
-
-            ctx.fillText(
-                letter,
-                x + w / 2,
-                y
-            );
-
+            ctx.fillText(letter, x + w / 2, y);
             x += w + (spacing * scaleX);
-
         });
 
-    });
+        ctx.restore();
 
+    });
 }
 
 function drawLogo(ctx, previewRect, scaleX, scaleY){
 
-    const shadow = document.querySelector(".logo-shadow");
     const text = document.querySelector(".logo-text");
-
-    const shadowRect = shadow.getBoundingClientRect();
     const textRect = text.getBoundingClientRect();
 
-    
-       // ---------- BLN ----------
-
+    // ---------- BLN ----------
     const bln = document.querySelector(".logo-bln");
-
     const blnRect = bln.getBoundingClientRect();
-
     const blnStyle = getComputedStyle(bln);
 
     ctx.save();
-
     ctx.font = `${blnStyle.fontWeight} ${parseFloat(blnStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
-
     ctx.fillStyle = blnStyle.color;
-
     ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-
+    ctx.textBaseline = "alphabetic";
     ctx.scale(1,1);
-
-    // Igual que el text-shadow del CSS
+    
     ctx.shadowColor = "rgba(0,0,0,0.75)";
     ctx.shadowBlur = 0.8 * scaleX;
     ctx.shadowOffsetX = 1 * scaleX;
     ctx.shadowOffsetY = 2.5 * scaleY;
 
     const blnLetters = "BLN".split("");
-
     const blnSpacing = -1 * scaleX;
+    let blnX = (blnRect.left - previewRect.left) * scaleX;
 
-    let blnX =
-        (blnRect.left - previewRect.left) * scaleX;
-
+    const blnMetrics = ctx.measureText("BLN");
+    const blnAscent = blnMetrics.fontBoundingBoxAscent || blnMetrics.actualBoundingBoxAscent;
+    const blnY = (blnRect.top - previewRect.top) * scaleY + blnAscent;
 
     blnLetters.forEach(letter => {
-
-        ctx.fillText(
-            letter,
-            blnX,
-            (blnRect.top - previewRect.top) * scaleY
-        );
-
+        ctx.fillText(letter, blnX, blnY);
         blnX += ctx.measureText(letter).width + blnSpacing;
-
     });
-
     ctx.restore();
 
     // ---------- ® ----------
-
     const reg = document.querySelector(".logo-reg");
-
     const regRect = reg.getBoundingClientRect();
-
     const regStyle = getComputedStyle(reg);
 
     ctx.save();
-
     ctx.font = `${regStyle.fontWeight} ${parseFloat(regStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
-
     ctx.fillStyle = regStyle.color;
-
     ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-
-    // Misma sombra que BLN
+    ctx.textBaseline = "alphabetic";
+    
     ctx.shadowColor = "rgba(0,0,0,1)";
     ctx.shadowBlur = 0.8 * scaleX;
     ctx.shadowOffsetX = 1 * scaleX;
     ctx.shadowOffsetY = 2 * scaleY;
 
-    ctx.fillText(
-        "®",
-        (regRect.left - previewRect.left) * scaleX,
-        (regRect.top - previewRect.top) * scaleY + 30
-    );
+    const regMetrics = ctx.measureText("®");
+    const regAscent = regMetrics.fontBoundingBoxAscent || regMetrics.actualBoundingBoxAscent;
+    const regY = (regRect.top - previewRect.top) * scaleY + regAscent;
 
+    ctx.fillText("®", (regRect.left - previewRect.left) * scaleX, regY + 30);
     ctx.restore();
     
-
+    // ---------- TEXTO ----------
     ctx.save();
-    
     ctx.shadowColor = "rgba(0,0,0,1)";
     ctx.shadowBlur = 0.8 * scaleX;
     ctx.shadowOffsetX = 1 * scaleX;
     ctx.shadowOffsetY = 2 * scaleY;
 
-    // ---------- TEXTO ----------
-
-    style = getComputedStyle(text);
-
+    let style = getComputedStyle(text);
     ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
-
-    ctx.textBaseline = "top";
+    ctx.textBaseline = "alphabetic";
 
     const top = style.getPropertyValue("--top-color");
     const bottom = style.getPropertyValue("--bottom-color");
 
     const gradient = ctx.createLinearGradient(
-        0,
-        (textRect.top - previewRect.top) * scaleY,
-        0,
-        (textRect.bottom - previewRect.top) * scaleY
+        0, (textRect.top - previewRect.top) * scaleY,
+        0, (textRect.bottom - previewRect.top) * scaleY
     );
-
     gradient.addColorStop(0, top.trim());
     gradient.addColorStop(1, bottom.trim());
-
     ctx.fillStyle = gradient;
 
     const spacing = parseFloat(style.letterSpacing) || 0;
-
     const letters = text.textContent.split("");
-
     let totalWidth = 0;
 
     letters.forEach(letter => {
-
         totalWidth += ctx.measureText(letter).width + (spacing * scaleX);
-
     });
 
-    let x =
-        (textRect.left - previewRect.left) * scaleX +
-        (textRect.width * scaleX - totalWidth) / 2;
+    let x = (textRect.left - previewRect.left) * scaleX + (textRect.width * scaleX - totalWidth) / 2;
 
-    // 1. Obtenemos métricas precisas
-const metrics = ctx.measureText(line.textContent.toUpperCase());
-
-// 2. Esta es la clave: el "Ascent" es exactamente el espacio desde la línea base al tope.
-// Al usar textBaseline = "alphabetic" (que es el default), 
-// para que el tope del texto coincida con el tope de la caja, el Y debe ser:
-const wrapperRect = wrapper.getBoundingClientRect();
-const y = (wrapperRect.top - previewRect.top) * scaleY + metrics.fontBoundingBoxAscent;
-
-// 3. Dibujamos
-ctx.textBaseline = "alphabetic";
-ctx.fillText(letter, x + w / 2, y);
+    const textLogoMetrics = ctx.measureText(text.textContent.toUpperCase());
+    const textLogoAscent = textLogoMetrics.fontBoundingBoxAscent || textLogoMetrics.actualBoundingBoxAscent;
+    const textY = (text.parentElement.getBoundingClientRect().top - previewRect.top) * scaleY + textLogoAscent;
 
     letters.forEach(letter => {
-
         const w = ctx.measureText(letter).width;
-
-        ctx.fillText(
-            letter,
-            x + w / 2,
-            y
-        );
-
+        ctx.fillText(letter, x + w / 2, textY);
         x += w + (spacing * scaleX);
-
     });
-
     ctx.restore();    
-
 }
 
 // =========================
