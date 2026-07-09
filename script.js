@@ -239,7 +239,7 @@ function fitText(){
         const spacing = -size * 0.065;
 
         line.style.fontSize = size + "px";
-        line.style.lineHeight = size * 0.72 + "px";
+        line.style.lineHeight = size * 0.74 + "px";
         line.style.letterSpacing = spacing + "px";
 
         if(shadow){
@@ -293,6 +293,8 @@ function updateLogo(){
 
     text.style.setProperty("--top-color", top);
     text.style.setProperty("--bottom-color", bottom);
+
+    
 
     text.style.color = top;
 
@@ -720,7 +722,6 @@ document.addEventListener("mousemove", (e)=>{
 // =========================
 // EXPORTAR PNG
 // =========================
-
 exportBtn.addEventListener("click", () => {
 
     html2canvas(document.getElementById("preview"), {
@@ -731,12 +732,9 @@ exportBtn.addEventListener("click", () => {
 
     }).then(canvas => {
 
-        const link = document.createElement("a");
+        const data = canvas.toDataURL("image/png");
 
-        link.download = "thumbnail.png";
-        link.href = canvas.toDataURL("image/png");
-
-        link.click();
+        window.open(data, "_blank");
 
     });
 
