@@ -586,35 +586,35 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
         let style = getComputedStyle(shadow);
         ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
         ctx.textAlign = "center";
-        ctx.textBaseline = "middle"; // Anclaje al centro
+        ctx.textBaseline = "alphabetic"; // Replicamos el sistema de la previa
         ctx.fillStyle = style.color;
 
         const shadowSpacing = parseFloat(style.letterSpacing) || 0;
         const shadowLetters = shadow.textContent.split("");
         let shadowTotalWidth = 0;
 
-        shadowLetters.forEach(letter => {
+        /*shadowLetters.forEach(letter => {
             shadowTotalWidth += ctx.measureText(letter).width + (shadowSpacing * scaleX);
         });
 
         let shadowX = (shadowRect.left - previewRect.left) * scaleX + (shadowRect.width * scaleX - shadowTotalWidth) / 2;
         
-        // Calculamos el centro exacto de la caja
-        const shadowY = (shadowRect.top - previewRect.top + shadowRect.height / 2) * scaleY;
+        // Posicionamiento idéntico al renderizado web
+        const shadowY = (shadowRect.top - previewRect.top) * scaleY + (shadowRect.height * scaleY) * 0.97;
 
         shadowLetters.forEach(letter => {
             const w = ctx.measureText(letter).width;
             ctx.fillText(letter, shadowX + w / 2, shadowY);
             shadowX += w + (shadowSpacing * scaleX);
-        });
-        ctx.restore();
+        });*/
 
+        
 
         // ---------- TEXTO ----------
         style = getComputedStyle(text);
         ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
         ctx.textAlign = "center";
-        ctx.textBaseline = "middle"; // Anclaje al centro
+        ctx.textBaseline = "alphabetic"; // Replicamos el sistema de la previa
 
         const top = getComputedStyle(text).getPropertyValue("--top-color");
         const bottom = getComputedStyle(text).getPropertyValue("--bottom-color");
@@ -632,10 +632,10 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
         }
 
         ctx.save();
-        ctx.shadowColor = "rgba(0,0,0,0.75)";
-        ctx.shadowBlur = 0.8 * scaleX;
-        ctx.shadowOffsetX = 1 * scaleX;
-        ctx.shadowOffsetY = 2.5 * scaleY;
+        ctx.shadowColor = "rgba(0,0,0,1)";
+        ctx.shadowBlur = 0.8 * scaleX; // Escalado de difuminado para 4K
+        ctx.shadowOffsetX = 2 * scaleX;
+        ctx.shadowOffsetY = 3.5 * scaleY;
 
         const spacing = parseFloat(style.letterSpacing) || 0;
         const letters = text.textContent.split("");
@@ -647,9 +647,8 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
 
         let x = (textRect.left - previewRect.left) * scaleX + (textRect.width * scaleX - totalWidth) / 2;
 
-        // Calculamos el centro exacto de la línea principal
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const y = (wrapperRect.top - previewRect.top + wrapperRect.height / 2) * scaleY;
+        // Eje Y idéntico píxel por píxel a la vista de la app web
+        const y = (textRect.top - previewRect.top) * scaleY + (textRect.height * scaleY) * 0.97;
 
         letters.forEach(letter => {
             const w = ctx.measureText(letter).width;
@@ -676,11 +675,10 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     ctx.font = `${blnStyle.fontWeight} ${parseFloat(blnStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
     ctx.fillStyle = blnStyle.color;
     ctx.textAlign = "left";
-    ctx.textBaseline = "middle"; // Anclaje al centro
-    ctx.scale(1,1);
+    ctx.textBaseline = "alphabetic";
     
-    ctx.shadowColor = "rgba(0,0,0,0.75)";
-    ctx.shadowBlur = 0.8 * scaleX;
+    ctx.shadowColor = "rgba(0,0,0,1)";
+    ctx.shadowBlur = 0.8 * scaleX; // Sombra difuminada escalada
     ctx.shadowOffsetX = 1 * scaleX;
     ctx.shadowOffsetY = 2.5 * scaleY;
 
@@ -688,7 +686,7 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     const blnSpacing = -1 * scaleX;
     let blnX = (blnRect.left - previewRect.left) * scaleX;
     
-    const blnY = (blnRect.top - previewRect.top + blnRect.height / 2) * scaleY;
+    const blnY = (blnRect.top - previewRect.top) * scaleY + (blnRect.height * scaleY) * 0.97;
 
     blnLetters.forEach(letter => {
         ctx.fillText(letter, blnX, blnY);
@@ -705,30 +703,28 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
     ctx.font = `${regStyle.fontWeight} ${parseFloat(regStyle.fontSize) * scaleY}px "Futura Round", sans-serif`;
     ctx.fillStyle = regStyle.color;
     ctx.textAlign = "left";
-    ctx.textBaseline = "middle"; // Anclaje al centro
+    ctx.textBaseline = "alphabetic";
     
     ctx.shadowColor = "rgba(0,0,0,1)";
-    ctx.shadowBlur = 0.8 * scaleX;
+    ctx.shadowBlur = 0.8 * scaleX; // Sombra difuminada escalada
     ctx.shadowOffsetX = 1 * scaleX;
     ctx.shadowOffsetY = 2 * scaleY;
 
-    // Aquí se eliminó el +30, tomará la geometría real del HTML
-    const regY = (regRect.top - previewRect.top + regRect.height / 2) * scaleY;
+    const regY = (regRect.top - previewRect.top) * scaleY + (regRect.height * scaleY) * 0.97;
     ctx.fillText("®", (regRect.left - previewRect.left) * scaleX, regY);
-
     ctx.restore();
     
-    // ---------- TEXTO ----------
+    // ---------- TEXTO (GAMES) ----------
     ctx.save();
     ctx.shadowColor = "rgba(0,0,0,1)";
-    ctx.shadowBlur = 0.8 * scaleX;
+    ctx.shadowBlur = 0.8 * scaleX; // Sombra difuminada corregida para el título del logo
     ctx.shadowOffsetX = 1 * scaleX;
     ctx.shadowOffsetY = 2 * scaleY;
 
     let style = getComputedStyle(text);
     ctx.font = `${style.fontWeight} ${parseFloat(style.fontSize) * scaleY}px "Futura Round", sans-serif`;
     ctx.textAlign = "center";
-    ctx.textBaseline = "middle"; // Anclaje al centro
+    ctx.textBaseline = "alphabetic";
 
     const top = style.getPropertyValue("--top-color");
     const bottom = style.getPropertyValue("--bottom-color");
@@ -751,8 +747,7 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
 
     let x = (textRect.left - previewRect.left) * scaleX + (textRect.width * scaleX - totalWidth) / 2;
     
-    const parentRect = text.parentElement.getBoundingClientRect();
-    const textY = (parentRect.top - previewRect.top + parentRect.height / 2) * scaleY;
+    const textY = (textRect.top - previewRect.top) * scaleY + (textRect.height * scaleY) * 0.97;
 
     letters.forEach(letter => {
         const w = ctx.measureText(letter).width;
@@ -874,66 +869,6 @@ imageInput.addEventListener("change",(e)=>{
     reader.readAsDataURL(file);
 });
 
-// =========================
-// RESIZE CAJA (ESQUINA)
-// =========================
-
-/*let resizing = false;
-
-const handle = document.getElementById("resizeHandle");
-
-handle.addEventListener("mousedown", ()=>{
-    resizing = true;
-});
-
-document.addEventListener("mouseup", ()=>{
-    resizing = false;
-});
-
-document.addEventListener("mousemove", (e)=>{
-
-    if(!resizing) return;
-
-    const rect = textBox.getBoundingClientRect();
-
-    let newWidth = e.clientX - rect.left;
-    //let newHeight = rect.bottom - e.clientY;
-
-    // límites mínimos y máximos
-    newWidth = Math.max(40, Math.min(newWidth, window.innerWidth * 0.9));
-    //newHeight = Math.max(20, Math.min(newHeight, window.innerHeight * 0.8));
-
-    textBox.style.width = newWidth + "px";
-    //textBox.style.height = newHeight + "px";
-
-    fitText();
-    adjustBoxHeight();
-});*/
-
-
-// =========================
-// EXPORTAR PNG
-// =========================
-/*exportBtn.addEventListener("click", () => {
-
-    setTimeout(() => {
-
-        html2canvas(document.getElementById("preview"), {
-            scale: 3,
-            useCORS: true,
-            backgroundColor: null
-        }).then(canvas => {
-
-            const link = document.createElement("a");
-            link.download = "thumbnail.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-
-        });
-
-    }, 200);
-
-});*/
 
 exportBtn.addEventListener("click", async () => {
 
@@ -1023,7 +958,7 @@ ctx.roundRect(
     (textRect.top - previewRect.top) * scaleY,
     textRect.width * scaleX,
     textRect.height * scaleY,
-    40
+    150
 
 );
 
@@ -1056,7 +991,7 @@ ctx.roundRect(
     (logoRect.top - previewRect.top) * scaleY,
     logoRect.width * scaleX,
     logoRect.height * scaleY,
-    30
+    70
 
 );
 
