@@ -682,7 +682,11 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
             (textRect.left - previewRect.left) * scaleX +
             (textRect.width * scaleX - totalWidth) / 2;
 
-        const y = (wrapper.getBoundingClientRect().top - previewRect.top) * scaleY;
+        const metrics = ctx.measureText(text.textContent.toUpperCase());
+const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+const wrapperRect = wrapper.getBoundingClientRect();
+const targetCenterY = (wrapperRect.top - previewRect.top) * scaleY + (wrapperRect.height * scaleY / 2);
+const y = targetCenterY + (fontHeight / 2) - metrics.fontBoundingBoxDescent;
 
         letters.forEach(letter => {
 
@@ -836,7 +840,11 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
         (textRect.left - previewRect.left) * scaleX +
         (textRect.width * scaleX - totalWidth) / 2;
 
-    const y = (text.parentElement.getBoundingClientRect().top - previewRect.top) * scaleY;
+    const metrics = ctx.measureText(text.textContent.toUpperCase());
+const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+const parentRect = text.parentElement.getBoundingClientRect();
+const targetCenterY = (parentRect.top - previewRect.top) * scaleY + (parentRect.height * scaleY / 2);
+const y = targetCenterY + (fontHeight / 2) - metrics.fontBoundingBoxDescent;
 
     letters.forEach(letter => {
 
