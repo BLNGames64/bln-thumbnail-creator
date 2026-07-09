@@ -6,7 +6,7 @@
     "background_color": "#111111",
     "theme_color": "#111111",
     "orientation": "landscape",
-    "version": "v1.13",
+    "version": "v1.131",
     "message": "Cambio de sistema de exportación PNG y completamente corregido en todas las plataformas.\nMejor calidad de los degradados del texto y del logo.\nPosibilidad de usar degradados de uno o dos colores.\nMejoras en el ajuste automático del texto.\nMejor estabilidad y precisión del editor.\nNueva ventana de información con versión y novedades.",
     "icons": [
         {
