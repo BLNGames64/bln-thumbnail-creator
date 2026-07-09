@@ -724,19 +724,22 @@ document.addEventListener("mousemove", (e)=>{
 // =========================
 exportBtn.addEventListener("click", () => {
 
-    html2canvas(document.getElementById("preview"), {
+    setTimeout(() => {
 
-        scale: 3,
-        useCORS: true,
-        backgroundColor: null
+        html2canvas(document.getElementById("preview"), {
+            scale: 3,
+            useCORS: true,
+            backgroundColor: null
+        }).then(canvas => {
 
-    }).then(canvas => {
+            const link = document.createElement("a");
+            link.download = "thumbnail.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
 
-        const data = canvas.toDataURL("image/png");
+        });
 
-        window.open(data, "_blank");
-
-    });
+    }, 200);
 
 });
 
