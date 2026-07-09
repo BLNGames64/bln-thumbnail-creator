@@ -680,9 +680,7 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
             (textRect.left - previewRect.left) * scaleX +
             (textRect.width * scaleX - totalWidth) / 2;
 
-        const y = 
-    (textRect.top - previewRect.top) * scaleY
-    + (textRect.height * scaleY * 0);
+        const y = (wrapper.getBoundingClientRect().top - previewRect.top) * scaleY;
 
         letters.forEach(letter => {
 
