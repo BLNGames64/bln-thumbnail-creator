@@ -752,8 +752,20 @@ exportBtn.addEventListener("click", async () => {
 
     const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = "#202020";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+    if (backgroundImage.src) {
+        await new Promise(resolve => {
+            if (backgroundImage.complete) {
+                resolve();
+            } else {
+                backgroundImage.onload = resolve;
+            }
+        });
+
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    } else {
+        ctx.fillStyle = "#202020";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     const img = new Image();
 
