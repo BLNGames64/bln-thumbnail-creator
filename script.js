@@ -680,7 +680,9 @@ function drawTitle(ctx, previewRect, scaleX, scaleY){
             (textRect.left - previewRect.left) * scaleX +
             (textRect.width * scaleX - totalWidth) / 2;
 
-        const y = (textRect.top - previewRect.top) * scaleY;
+        const y = 
+    (textRect.top - previewRect.top) * scaleY
+    + (textRect.height * scaleY * 0);
 
         letters.forEach(letter => {
 
@@ -832,7 +834,9 @@ function drawLogo(ctx, previewRect, scaleX, scaleY){
         (textRect.left - previewRect.left) * scaleX +
         (textRect.width * scaleX - totalWidth) / 2;
 
-    const y = (textRect.top - previewRect.top) * scaleY;
+    const y = 
+    (textRect.top - previewRect.top) * scaleY
+    + (textRect.height * scaleY * 0);
 
     letters.forEach(letter => {
 
